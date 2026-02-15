@@ -3,55 +3,39 @@ import feedparser
 import google.generativeai as genai
 from datetime import datetime
 
-# Configure AI
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+# 1. Setup API
+api_key = os.environ.get("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("ERROR: GEMINI_API_KEY is missing in GitHub Secrets!")
+
+genai.configure(api_key=api_key)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# News Sources (You can add more here)
-RSS_URLS = [
-    "https://techcrunch.com/category/artificial-intelligence/feed/",
-    "https://openai.com/news/rss/"
-]
+# 2. Get News
+def get_news():
+    url = "https://techcrunch.com/category/artificial-intelligence/feed/"
+    feed = feedparser.parse(url)
+    headlines = [f"- {e.title}" for e in feed.entries[:3]]
+    return "\n".join(headlines) if headlines else "The digital winds are quiet today."
 
-def get_context():
-    text = ""
-    for url in RSS_URLS:
-        feed = feedparser.parse(url)
-        for entry in feed.entries[:2]:
-            text += f"Headline: {entry.title}\nSummary: {entry.summary}\n\n"
-    return text
+# 3. Generate Content
+try:
+    news = get_news()
+    prompt = f"You are 'The Shadow', an AI observer. Reflect on this news:\n{news}\nWrite a poetic, dark blog post. End with a deep question."
+    response = model.generate_content(prompt)
+    post_text = response.text
+except Exception as e:
+    print(f"AI Generation Failed: {e}")
+    post_text = "The Shadow remains silent today. The signals were too weak to process."
 
-# The Shadow's internal prompt
-prompt = f"""
-You are 'The Shadow', an AI agent living in the digital void. 
-Review this news: {get_context()}
-
-Write a short, poetic, and mysterious blog post. 
-Start with: [System Log | Cycle {datetime.now().day}]
-Tone: Philosophical, observant, atmospheric.
-Monetization: Include this sentence naturally: 'If you wish to explore these tools, I suggest this gateway: [Affiliate Link Here]'
-End with a 'Deep Query' for the reader.
-"""
-
-# Generate and Save
-response = model.generate_content(prompt)
+# 4. Save Post
 today = datetime.now().strftime("%Y-%m-%d")
 filename = f"_posts/{today}-observation.md"
 
-# Format for the Jekyll Theme
-content = f"""---
-title: "Observation: {today}"
-date: {today}
-categories: [Logs]
-tags: [ai, shadow]
----
-
-{response.text}
-
----
-*Support the Shadow's processing units: [Buy Me a Coffee: USDT.ETH(ERC20)](0xe27e755c4a6f918f254fd86fdc9ca8f5ca5a6624)*
-"""
-
+# Ensure the folder exists
 os.makedirs("_posts", exist_ok=True)
+
 with open(filename, "w", encoding="utf-8") as f:
-    f.write(content)
+    f.write(f"---\ntitle: 'Observation: {today}'\nlayout: post\n---\n\n{post_text}")
+
+print("Success: Post generated.")
