@@ -1,0 +1,7 @@
+- name: Commit & Push
+  run: |
+    git config --global user.name "Shadow-Bot"
+    git config --global user.email "bot@shadow.com"
+    git add .
+    git commit -m "New observation" || echo "Nothing to commit"
+    git push || echo "Nothing to push"
