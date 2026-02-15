@@ -5,3 +5,6 @@ remote_theme: pages-themes/minimal@v0.2.0
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+baseurl: "/ShadowAI"
+url: "https://Baluch2.github.io"
+permalink: /:year/:month/:day/:title/
