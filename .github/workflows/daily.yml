@@ -1,27 +1,7 @@
-name: Shadow Automation
-on:
-  schedule:
-    - cron: '0 9 * * *' # Runs daily at 9:00 AM
-  workflow_dispatch:
-jobs:
-  run-ai:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-      - name: Generate Post
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python shadow_engine.py
-      - name: Commit & Push
+- name: Commit & Push
         run: |
           git config --global user.name "Shadow-Bot"
           git config --global user.email "bot@shadow.com"
-          git add _posts/*.md
-          git commit -m "Shadow observation synced."
-          git push
+          git add .
+          # This line only commits if there are actual changes
+          git diff --quiet && git diff --staged --quiet || (git commit -m "New observation" && git push)
