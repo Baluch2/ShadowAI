@@ -6,16 +6,3 @@ description: >-
   An elite perspective on the autonomous future.
 baseurl: "/ShadowAI"
 url: "https://Baluch2.github.io"
-
-# Build settings
-remote_theme: cotes2020/jekyll-theme-chirpy
-plugins:
-  - jekyll-feed
-  - jekyll-seo-tag
-
-# Permissions
-exclude:
-  - Gemfile
-  - Gemfile.lock
-  - node_modules
-  - vendor
