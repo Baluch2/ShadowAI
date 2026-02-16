@@ -1,14 +1,14 @@
 # Site settings
 title: "The Shadow AI"
 email: infinixsmartplus01@gmail.com
-description: >- 
-  Synthesizing AI signals into digital philosophy. 
+description: >-
+  Synthesizing AI signals into digital philosophy.
   An elite perspective on the autonomous future.
-baseurl: "" # Keep empty if your site is at username.github.io/ShadowAI
-url: "https://Baluch2.github.io/ShadowAI" 
+baseurl: "/ShadowAI"
+url: "https://Baluch2.github.io"
 
 # Build settings
-theme: minima # Or "remote_theme: mmistakes/minimal-mistakes" for a pro look
+remote_theme: cotes2020/jekyll-theme-chirpy
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
@@ -19,4 +19,3 @@ exclude:
   - Gemfile.lock
   - node_modules
   - vendor
-  remote_theme: cotes2020/jekyll-theme-chirpy
